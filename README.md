@@ -9,7 +9,7 @@ Usage
 From source:
 
     >>> from url2feed import extract
-    >>> print extract('www.metalhammer.co.ck')
+    >>> print extract('www.metalhammer.co.uk')
     {
         'link': 'http://www.metalhammer.co.uk',
         'url': 'http://feeds.feedburner.com/metalhammer/main',
