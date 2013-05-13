@@ -17,11 +17,13 @@ setup(
         name='url2feed',
         version=version,
         description="Extract feed from url.",
-        # Get more strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
         classifiers=[
+            "Environment :: Console",
+            "Development Status :: 3 - Alpha",
             "Programming Language :: Python",
+            "Topic :: Internet",
         ],
-        keywords=['rss', 'atom', 'feed'],
+        keywords=['url2feed', 'url', 'rss', 'atom', 'feed'],
         author='snp',
         author_email='gosu.snp@gmail.com',
         url='https://github.com/gosusnp/url2feed',

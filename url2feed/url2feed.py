@@ -55,7 +55,11 @@ def extract(entrypoint):
     the feed.
 
     """
-    urls, html = fetch(entrypoint)
+    fetched_data = fetch(entrypoint)
+    if fetched_data is None:
+        return None
+    else:
+        urls, html = fetched_data
     feeds = extract_feeds(html, urls[-1])
     expanded_feeds = expand_feeds(feeds)
     results = filter_expanded_feeds(urls, expanded_feeds)
@@ -64,6 +68,9 @@ def extract(entrypoint):
     # TODO Scoring based on sublinks? -> http://www.lefigaro.fr
 
     if results:
+        # Temporary behavior
+        # on multiple results: select the first one
+        # TODO Implement better scoring
         del results[0]['sublinks']
         results[0]['link'] = results[0]['link'][0]
         return results[0]
@@ -90,7 +97,4 @@ def main():
         else:
             stream.write((u'   not found\n').encode('utf8'))
         stream.write('\n')
-
-if __name__ == '__main__':
-    main()
 

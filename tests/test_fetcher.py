@@ -73,47 +73,71 @@ class MockHTTPConnection(object):
 httplib.HTTPConnection = MockHTTPConnection
 
 class TestFetcher(unittest.TestCase):
-    def test_extract_netloc_path(self):
+    def test_extract_netloc_path__no_path(self):
         self.assertEqual(
                 extract_netloc_path('http://www.myhost.com'),
                 ('www.myhost.com', ''))
+
+    def test_extract_netloc_path__path_is_slash(self):
         self.assertEqual(
                 extract_netloc_path('http://www.myhost.com/'),
                 ('www.myhost.com', '/'))
+
+    def test_extract_netloc_path__with_path_and_params(self):
         self.assertEqual(
                 extract_netloc_path('http://www.myhost.com/test?params=true'),
                 ('www.myhost.com', '/test'))
+
+    def test_extract_netloc_path__with_path_and_hash(self):
         self.assertEqual(
                 extract_netloc_path('http://www.myhost.com/#hash'),
                 ('www.myhost.com', '/'))
+
+    def test_extract_netloc_path__with_path_params_and_hash(self):
         self.assertEqual(
                 extract_netloc_path('http://www.myhost.com/ultimate?params=true#hash'),
                 ('www.myhost.com', '/ultimate'))
 
-    def test_follow_redirect(self):
+    def test_follow_redirect__basic(self):
         self.assertEqual(
                 follow_redirect('http://myhost.com'),
                 ['http://myhost.com', 'http://www.myhost.com/'])
+
+    def test_follow_redirect__complete_relative_location(self):
         self.assertEqual(
                 follow_redirect('http://www.myhost.com/noslash'),
                 ['http://www.myhost.com/noslash', 'http://www.myhost.com/slashless'])
+
+    def test_follow_redirect__no_crash_on_missing_location(self):
         self.assertEqual(
                 follow_redirect('http://www.myhost.com/nolocation'),
                 [])
+
+    def test_follow_redirect__test_max_redirect(self):
         self.assertEqual(
                 follow_redirect('http://www.myhost.com/loop'),
                 [])
+
+    def test_follow_redirect__badhost(self):
         self.assertEqual(
                 follow_redirect('http://badhost'),
                 [])
 
-    def test_fetch(self):
+    def test_fetch__std_url(self):
         self.assertEqual(fetch('http://myhost.com'),
                 (['http://myhost.com', 'http://www.myhost.com/'], 'content!'))
+
+    def test_fetch__domain_name_only(self):
         self.assertEqual(fetch('myhost.com'),
                 (['http://myhost.com', 'http://www.myhost.com/'], 'content!'))
+
+    def test_fetch__do_not_crash_1(self):
         self.assertEqual(fetch('myhost.com/unexpected_failure500'), None)
+
+    def test_fetch__do_not_crash_2(self):
         self.assertEqual(fetch('myhost.com/unexpected_failure204'), None)
+
+    def test_fetch__do_not_crash_3(self):
         self.assertEqual(fetch('badhost'), None)
 
 
