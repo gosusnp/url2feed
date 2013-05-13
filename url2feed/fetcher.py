@@ -26,25 +26,29 @@ def follow_redirect(url, max_redirect=5):
         if len(redirect) > max_redirect:
             break
 
-        conn = httplib.HTTPConnection(netloc)
-        conn.request("HEAD", path)
-        response = conn.getresponse()
+        try:
+            conn = httplib.HTTPConnection(netloc)
+            conn.request("HEAD", path)
+            response = conn.getresponse()
+        except httplib.HTTPException:
+            status = 0
+            break
 
         status = response.status
         if status in (301, 302):
             try:
                 newloc = dict(response.getheaders())['location']
             except KeyError:
-                assert False # handle this case
+                status = 500
+                break
             else:
                 tmp_netloc, path = extract_netloc_path(newloc)
                 if tmp_netloc:
                     netloc = tmp_netloc
                 if not path.startswith('/'):
                     path = '/' + path
-                continue
-        # FIXME do something when status is not in (200, 301, 302)?
-        break
+        else:
+            break
     return redirect if status == 200 else []
 
 def fetch(url):
@@ -62,14 +66,18 @@ def fetch(url):
         urls = follow_redirect(url)
 
     if urls:
-        data = urllib2.urlopen(urls[-1])
-        if data.getcode() == 200:
-            content = data.read()
-            final_url = data.geturl()
-            assert final_url == urls[-1]
-            return urls, content
+        try:
+            data = urllib2.urlopen(urls[-1])
+        except urllib2.HTTPError:
+            return None
         else:
-            assert False # FIXME
+            if data.getcode() == 200:
+                content = data.read()
+                final_url = data.geturl()
+                assert final_url == urls[-1]
+                return urls, content
+            else:
+                return None
     else:
-        assert False # FIXME
+        return None
 

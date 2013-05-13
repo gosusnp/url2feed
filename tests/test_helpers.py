@@ -43,8 +43,9 @@ class TestHelpers(unittest.TestCase):
         self.assertTrue(url_match('http://www.myhost.com/', 'http://www.myhost.com/'))
         self.assertFalse(url_match('http://www.myhost.com', 'http://www.myhost.com?params'))
         self.assertFalse(url_match('http://www.myhost.com', 'http://www.myhost.com#hash'))
+        self.assertTrue(url_match(['http://www.myhost.com/', 'http://1'], 'http://www.myhost.com'))
+        self.assertTrue(url_match(['http://www.myhost.com/', 'http://1'], ['http://www.myhost.com']))
 
-         # TODO Write tests using sets of urls
 
     def test_create_candidate(self):
         self.assertEqual(
