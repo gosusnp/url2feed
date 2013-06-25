@@ -23,3 +23,5 @@ From command line:
        webpage  : http://www.metalhammer.co.uk
        feedurl  : http://feeds.feedburner.com/metalhammer/main
        feedtitle: Metal Hammer
+
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/f817085cce31a78a5cf37a2ce7274519 "githalytics.com")](http://githalytics.com/gosusnp/url2feed)
