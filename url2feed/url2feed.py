@@ -8,15 +8,14 @@ import feedparser
 from fetcher import fetch, follow_redirect
 from helpers import clean_url, create_candidate, url_match
 
+def is_feed_link(tag):
+    return tag['type'] == 'application/rss+xml' or tag['type'] == 'application/atom+xml' if tag.name == 'link' and tag.has_attr('type') else False
 
 def extract_feeds(html, url):
     """Extract feed urls from webpage"""
     w = BeautifulSoup(html) # FIXME handle errors
     feeds = []
-    for node in w.find_all(
-                'link',
-                attrs={'type': 'application/rss+xml'}
-            ):
+    for node in w.find_all(is_feed_link):
         try:
             feed_url = node['href']
         except KeyError:
@@ -98,3 +97,5 @@ def main():
             stream.write((u'   not found\n').encode('utf8'))
         stream.write('\n')
 
+if __name__ == '__main__':
+    main()
