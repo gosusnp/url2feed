@@ -9,7 +9,9 @@ from fetcher import fetch, follow_redirect
 from helpers import clean_url, create_candidate, url_match
 
 def is_feed_link(tag):
-    return tag['type'] == 'application/rss+xml' or tag['type'] == 'application/atom+xml' if tag.name == 'link' and tag.has_attr('type') else False
+    return tag['type'] == 'application/rss+xml' or \
+           tag['type'] == 'application/atom+xml' \
+           if tag.name == 'link' and tag.has_attr('type') else False
 
 def extract_feeds(html, url):
     """Extract feed urls from webpage"""
