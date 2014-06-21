@@ -19,10 +19,24 @@ WEBPAGE = """<html>
 </body>
 </html>"""
 
+WEBPAGE_ATOM = """<html>
+<head>
+<link rel="alternative" type="application/atom+xml" title="feed1" href="http://myhost.fr/atom" />
+<link rel="alternative" type="application/atom+xml" title="feed2" href="/atom" />
+<link rel="alternative" type="application/atom+xml" title="nolink" />
+</head>
+<body>
+</body>
+</html>"""
+
 class TestURL2FEED(unittest.TestCase):
     def test_extract_feeds(self):
         self.assertEqual(extract_feeds(WEBPAGE, "http://www.myhost.fr"),
                 [u'http://myhost.fr/rss', u'http://www.myhost.fr/rss'])
+
+    def test_extract_atom_feeds(self):
+        self.assertEqual(extract_feeds(WEBPAGE_ATOM, "http://www.myhost.fr"),
+                [u'http://myhost.fr/atom', u'http://www.myhost.fr/atom'])
 
     def test_expand_feeds(self):
         pass # FIXME
